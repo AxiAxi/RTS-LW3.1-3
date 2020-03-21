@@ -1,18 +1,24 @@
 // Task 1
 const fErmatFactorization = number => {
     
+    const performanceStart = performance.now();
+    
     if ((number <= 0) || !(Number.isInteger(number))) {
         return;
     };
     
     if ((number % 2) === 0) {
-        return [number / 2, 2];
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [number / 2, 2, fErmatFactorizationPerformance];
     };
     
     let a = Math.ceil(Math.sqrt(number));
     
     if (a**2 === number) {
-        return [a, a];
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [a, a, fErmatFactorizationPerformance];
     };
     
     let b;
@@ -29,7 +35,11 @@ const fErmatFactorization = number => {
         };
     };
     
-    return [a - b, a + b];
+    const performanceEnd = performance.now();
+    
+    const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+    
+    return [a - b, a + b, fErmatFactorizationPerformance];
 };
 
 // Task 2

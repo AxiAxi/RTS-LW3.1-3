@@ -7,18 +7,24 @@
 ```javascript
 const fErmatFactorization = number => {
     
+    const performanceStart = performance.now();
+    
     if ((number <= 0) || !(Number.isInteger(number))) {
         return;
     };
     
     if ((number % 2) === 0) {
-        return [number / 2, 2];
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [number / 2, 2, fErmatFactorizationPerformance];
     };
     
     let a = Math.ceil(Math.sqrt(number));
     
     if (a**2 === number) {
-        return [a, a];
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [a, a, fErmatFactorizationPerformance];
     };
     
     let b;
@@ -35,7 +41,11 @@ const fErmatFactorization = number => {
         };
     };
     
-    return [a - b, a + b];
+    const performanceEnd = performance.now();
+    
+    const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+    
+    return [a - b, a + b, fErmatFactorizationPerformance];
 };
 ```
 
@@ -203,5 +213,5 @@ const geneticAlgorithm = (generationsQuantityParam, crossoverLineIndex = 1) => {
 ![Test](/source/Test.jpg)
 ![Test0](/source/Test0.jpg)
 ![Test01](/source/Test01.jpg)
-![Test1](/source/Test1.jpg)
-![Test2](/source/Test2.jpg)
+![Test1](/source/Test02.jpg)
+![Test2](/source/Test03.jpg)

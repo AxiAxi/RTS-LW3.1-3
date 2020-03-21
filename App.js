@@ -3,35 +3,45 @@ import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 
 const fErmatFactorization = number => {
     
-  if ((number <= 0) || !(Number.isInteger(number))) {
-      return;
-  };
-  
-  if ((number % 2) === 0) {
-      return [number / 2, 2];
-  };
-  
-  let a = Math.ceil(Math.sqrt(number));
-  
-  if (a**2 === number) {
-      return [a, a];
-  };
-  
-  let b;
-  
-  while (true) {
-      let b1 = a**2 - number;
-      
-      b = Math.sqrt(b1) | 0;
-      
-      if (b**2 === b1) {
-          break;
-      } else {
-          a++;
-      };
-  };
-  
-  return [a - b, a + b];
+    const performanceStart = performance.now();
+    
+    if ((number <= 0) || !(Number.isInteger(number))) {
+        return;
+    };
+    
+    if ((number % 2) === 0) {
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [number / 2, 2, fErmatFactorizationPerformance];
+    };
+    
+    let a = Math.ceil(Math.sqrt(number));
+    
+    if (a**2 === number) {
+        const performanceEnd = performance.now();
+        const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+        return [a, a, fErmatFactorizationPerformance];
+    };
+    
+    let b;
+    
+    while (true) {
+        let b1 = a**2 - number;
+        
+        b = Math.sqrt(b1) | 0;
+        
+        if (b**2 === b1) {
+            break;
+        } else {
+            a++;
+        };
+    };
+    
+    const performanceEnd = performance.now();
+    
+    const fErmatFactorizationPerformance = performanceEnd - performanceStart;
+    
+    return [a - b, a + b, fErmatFactorizationPerformance];
 };
 
 const P = 4;
@@ -170,7 +180,7 @@ const geneticAlgorithm = (generationsQuantityParam, crossoverLineIndex, BOUNDARY
     };
     performanceEnd = performance.now();
     geneticAlgorithmPerformance = performanceEnd - performanceStart;
-    const deviance = ((f(...population[0]) - EQUATION.y) / f(...population[0], EQUATION)).toFixed(2) * 100;
+    const deviance = ((f(...population[0], EQUATION) - EQUATION.y) / f(...population[0], EQUATION)).toFixed(2) * 100;
     return {
         population: population,
         generation: Math.log2(generationsQuantityParam) - 1,
@@ -194,7 +204,6 @@ export default function App() {
     temporal: {isUsed: temporalDeadline > 0, seconds: temporalDeadline},
     iterative: {isUsed: iterativeDeadline > 0, iterations: iterativeDeadline}
   };
-  console.log(equationAnswer.deviance)
   const BOUNDARY = +(equation.y / 2).toFixed(geneticAccuracy) || 0;
   return (
     <View style={styles.container}>
@@ -204,6 +213,7 @@ export default function App() {
       <TextInput placeholder="Set Number" keyboardType="number-pad" onChangeText={text => setFactorizedNumber(text)}></TextInput>
       <Button title="Number Factorization" onPress={() => setFactorizedNumberAnswer(fErmatFactorization(+factorizedNumber))}></Button>
       <Text>{factorizedNumberAnswer && `A  =  ${factorizedNumberAnswer[0]}  &  B  =  ${factorizedNumberAnswer[1]}`}</Text>
+      <Text>{factorizedNumberAnswer && `Time spent:  ${factorizedNumberAnswer[2].toFixed(5)} ms`}</Text>
       <Text style={styles.header}>Perceptron Model</Text>
       <Text>Trigger Threshold: P = 4</Text>
       <Text>Points: +A(0, 6), +B(1, 5), -C(3, 3) And -D(2, 4)</Text>
@@ -237,7 +247,7 @@ export default function App() {
       <Button title="Integer Roots Search" onPress={() => setEquationAnswer(geneticAlgorithm(generationsQuantity, crossoverLineIndex, BOUNDARY, equation))}></Button>
       <Text>{equationAnswer.population && `a  =  ${equationAnswer.population[0]}  &  b  =  ${equationAnswer.population[1]}  &  c  =  ${equationAnswer.population[2]}  &  d  =  ${equationAnswer.population[3]}`}</Text>
       <Text>{equationAnswer.generation && `Generation: ${equationAnswer.generation}`}</Text>
-      <Text>{equationAnswer.population && `Deviance: ${equationAnswer.deviance}`}</Text>
+      <Text>{equationAnswer.population && `Deviance: ${equationAnswer.deviance}%`}</Text>
       <Text>{equationAnswer.performanceTime && `Time spent:  ${equationAnswer.performanceTime.toFixed(5)} ms`}</Text>
       <Text>{equationAnswer.population && 'Checkup:'}</Text>
       <Text>{equationAnswer.population && `${equationAnswer.population[0]} * ${equation.x1} + ${equationAnswer.population[1]} * ${equation.x2} + ${equationAnswer.population[2]} * ${equation.x3} + ${equationAnswer.population[3]} * ${equation.x4} = ${equation.y}`}</Text>
