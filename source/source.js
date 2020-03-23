@@ -23,12 +23,16 @@ const fErmatFactorization = number => {
     
     let b;
     
+    /*  Обмеження на час виконання (10 секунд)  */
+    const temporalDeadline = 10000;
+    
     while (true) {
         let b1 = a**2 - number;
         
         b = Math.sqrt(b1) | 0;
         
-        if (b**2 === b1) {
+                            /*  Перевірка на час виконання  */
+        if ((b**2 === b1) || ((performance.now() - performanceStart) >= temporalDeadline)) {
             break;
         } else {
             a++;
