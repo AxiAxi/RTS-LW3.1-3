@@ -112,6 +112,8 @@ const perceptronTraining = (P, accuracy, learningSpeed, deadlines, paramW1 = 0, 
 
 const geneticAccuracy = 0;
 
+const mutationProbabilityLimit = .9;
+
 const f = (a, b, c, d, EQUATION) => +(a * EQUATION.x1 + b * EQUATION.x2 + c * EQUATION.x3 + d * EQUATION.x4).toFixed(geneticAccuracy);
 
 const populationGenerator = (genotypeQuantity, BOUNDARY) => {
@@ -176,13 +178,23 @@ const geneticAlgorithm = (generationsQuantityParam, crossoverLineIndex, BOUNDARY
         for (let gene = 0; gene < parentCoupleWithValues.length; gene++) {
             population.push(...genotypeCrossing(...parentCoupleWithValues[gene], crossoverLineIndex));
         };
+        /*  [МУТАЦІЯ]   */
+        for (let gene = 0; gene < population.length; gene++) {
+            const geneMutationProbability = Math.random();
+            if (geneMutationProbability > mutationProbabilityLimit) {
+                for (let geneMember = 0; geneMember < population[gene].length; geneMember++) {
+                    population[gene][geneMember] += +(Math.random() * 2 * BOUNDARY - BOUNDARY).toFixed(geneticAccuracy);
+                };
+            };
+        };
+        /*  [МУТАЦІЯ]   */
         generationsQuantity /= 2;
     };
     performanceEnd = performance.now();
     geneticAlgorithmPerformance = performanceEnd - performanceStart;
     const deviance = ((f(...population[0], EQUATION) - EQUATION.y) / f(...population[0], EQUATION)).toFixed(2) * 100;
     return {
-        population: population,
+        population: (population.length === 1) ? population : population[0],
         generation: Math.log2(generationsQuantityParam) - 1,
         deviance: deviance,
         performanceTime: geneticAlgorithmPerformance

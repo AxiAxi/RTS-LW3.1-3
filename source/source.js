@@ -121,6 +121,8 @@ const EQUATION = {x1: 10, x2: -3, x3: 25, x4: -7, y: 126};
 
 const geneticAccuracy = 0;
 
+const mutationProbabilityLimit = .9;
+
 const BOUNDARY = +(EQUATION.y / 2).toFixed(geneticAccuracy);
 
 const f = (a, b, c, d) => +(a * EQUATION.x1 + b * EQUATION.x2 + c * EQUATION.x3 + d * EQUATION.x4).toFixed(geneticAccuracy);
@@ -186,6 +188,16 @@ const geneticAlgorithm = (generationsQuantityParam, crossoverLineIndex = 1) => {
         for (let gene = 0; gene < parentCoupleWithValues.length; gene++) {
             population.push(...genotypeCrossing(...parentCoupleWithValues[gene], crossoverLineIndex));
         };
+        /*  [МУТАЦІЯ]   */
+        for (let gene = 0; gene < population.length; gene++) {
+            const geneMutationProbability = Math.random();
+            if (geneMutationProbability > mutationProbabilityLimit) {
+                for (let geneMember = 0; geneMember < population[gene].length; geneMember++) {
+                    population[gene][geneMember] += +(Math.random() * 2 * BOUNDARY - BOUNDARY).toFixed(geneticAccuracy);
+                };
+            };
+        };
+        /*  [МУТАЦІЯ]   */
         generationsQuantity /= 2;
     };
     performanceEnd = performance.now();
